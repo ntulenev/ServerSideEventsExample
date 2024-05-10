@@ -25,7 +25,7 @@ app.MapGet("/events/for/{userId}",
             await http.Response.WriteAsync(
                 $"data: Message {i++} for userId {userId} at {DateTime.Now}\n\n", ct);
 
-            await Task.Delay(5000, ct);
+            await Task.Delay(TimeSpan.FromSeconds(5), ct);
         }
     }
     catch (OperationCanceledException)
