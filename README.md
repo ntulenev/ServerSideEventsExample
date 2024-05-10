@@ -1,4 +1,4 @@
-# ServerSideEventsExample
+# ServerSideEvents example
 This project demonstrates a minimal implementation of SSE based on asp.net
 
 The server provides an HTTP GET endpoint "/events/for/{userId}" with the header "text/event-stream". 
