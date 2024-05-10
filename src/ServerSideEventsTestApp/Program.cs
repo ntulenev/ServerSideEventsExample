@@ -23,7 +23,7 @@ app.MapGet("/events/for/{userId}",
             ct.ThrowIfCancellationRequested();
 
             await http.Response.WriteAsync(
-                $"data: Message {i++} for userId {userId} at {DateTime.Now}\n\n", ct);
+                $"data: Message {i++} for userId {userId} at {DateTimeOffset.Now}\n\n", ct);
 
             await Task.Delay(TimeSpan.FromSeconds(5), ct);
         }
