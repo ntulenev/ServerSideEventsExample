@@ -17,7 +17,7 @@ app.MapGet("/events/for/{userId}",
 
     try
     {
-        int i = 0;
+        long i = 0;
         while (true)
         {
             ct.ThrowIfCancellationRequested();
