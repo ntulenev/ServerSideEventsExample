@@ -22,10 +22,14 @@ app.MapGet("/events/for/{userId}",
         {
             ct.ThrowIfCancellationRequested();
 
-            await http.Response.WriteAsync(
-                $"data: Message {i++} for userId {userId} at {DateTimeOffset.Now}\n\n", ct);
+            var msg =
+                $"data: Message {i++} for userId {userId} at {DateTimeOffset.Now}\n\n";
 
-            await Task.Delay(TimeSpan.FromSeconds(5), ct);
+            Console.WriteLine(msg);
+
+            await http.Response.WriteAsync(msg, ct);
+
+            await Task.Delay(TimeSpan.FromSeconds(1), ct);
         }
     }
     catch (OperationCanceledException)
