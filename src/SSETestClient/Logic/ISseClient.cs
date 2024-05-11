@@ -1,6 +1,8 @@
-﻿namespace SSETestClient.Logic;
+﻿using SSETestClient.Models;
+
+namespace SSETestClient.Logic;
 
 public interface ISseClient
 {
-    IAsyncEnumerable<string> ConnectAsync(Uri uri, CancellationToken cancellationToken);
+    IAsyncEnumerable<SseEvent> ConnectAsync(Uri uri, CancellationToken cancellationToken);
 }

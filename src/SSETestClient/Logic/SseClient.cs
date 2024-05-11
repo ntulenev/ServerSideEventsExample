@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using SSETestClient.Models;
+using System.Runtime.CompilerServices;
 
 namespace SSETestClient.Logic;
 
@@ -10,7 +11,7 @@ public class SseClient : ISseClient
         _httpClient = httpClient;
     }
 
-    public async IAsyncEnumerable<string> ConnectAsync(
+    public async IAsyncEnumerable<SseEvent> ConnectAsync(
         Uri uri,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
@@ -30,11 +31,33 @@ public class SseClient : ISseClient
         {
             cancellationToken.ThrowIfCancellationRequested();
             var line = await reader.ReadLineAsync(cancellationToken);
-            if (!string.IsNullOrEmpty(line))
+            if (TryParseSseEvent(line, out SseEvent eventObj))
             {
-                yield return line;
+                yield return eventObj;
             }
         }
+    }
+
+    private static bool TryParseSseEvent(string? line, out SseEvent eventObj)
+    {
+        eventObj = null!;
+
+        if (string.IsNullOrWhiteSpace(line))
+        {
+            return false;
+        }
+
+        var delimiterPos = line.IndexOf(':');
+        if (delimiterPos > -1)
+        {
+            var key = line[..delimiterPos].Trim().ToString();
+            var payload = line[(delimiterPos + 1)..].Trim().ToString();
+            eventObj = new SseEvent(key, payload);
+            return true;
+
+        }
+
+        return false;
     }
 
     private readonly HttpClient _httpClient;
