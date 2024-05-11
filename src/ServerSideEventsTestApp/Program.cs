@@ -21,14 +21,8 @@ app.MapGet("/events/for/{userId}",
         while (true)
         {
             ct.ThrowIfCancellationRequested();
-
-            var msg =
-                $"data: Message {i++} for userId {userId} at {DateTimeOffset.Now}\n\n";
-
-            Console.WriteLine(msg);
-
-            await http.Response.WriteAsync(msg, ct);
-
+            await http.Response.WriteAsync(
+                $"data: Message {i++} for userId {userId} at {DateTimeOffset.Now}\n\n", ct);
             await Task.Delay(TimeSpan.FromSeconds(1), ct);
         }
     }
