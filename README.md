@@ -5,3 +5,8 @@ The server provides an HTTP GET endpoint "/events/for/{userId}" with the header 
 Once a connection is established to this endpoint, a message is sent every 5 seconds.
 
 ![Example of usage via Browser](example.png)
+
+
+The project also contains console application with simplified implementation of an SSE client that returns data via IAsyncEnumerable
+
+![Example of usage via Browser](example2.png)
