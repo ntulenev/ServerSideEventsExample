@@ -19,7 +19,9 @@ Console.CancelKeyPress += (sender, e) =>
     Console.WriteLine("Cancellation requested. Shutting down...");
 };
 
-await foreach (var item in service.ConnectAsync(new Uri("http://localhost:5253/events/for/123"), cts.Token))
+var uriPath = "http://localhost:5253/events/for/123";
+
+await foreach (var item in service.ConnectAsync(new Uri(uriPath), cts.Token))
 {
     Console.WriteLine(item);
 }
