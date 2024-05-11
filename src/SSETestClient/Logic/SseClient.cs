@@ -11,7 +11,7 @@ public class SseClient : ISseClient
     }
 
     public async IAsyncEnumerable<string> ConnectAsync(
-        Uri uri, 
+        Uri uri,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, uri);
@@ -19,15 +19,16 @@ public class SseClient : ISseClient
             new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("text/event-stream"));
 
         using var response = await _httpClient.SendAsync(
-                                        request, 
-                                        HttpCompletionOption.ResponseHeadersRead, 
+                                        request,
+                                        HttpCompletionOption.ResponseHeadersRead,
                                         cancellationToken);
 
         using var body = await response.Content.ReadAsStreamAsync(cancellationToken);
         using var reader = new StreamReader(body);
 
-        while (!reader.EndOfStream && !cancellationToken.IsCancellationRequested)
+        while (!reader.EndOfStream)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var line = await reader.ReadLineAsync(cancellationToken);
             if (!string.IsNullOrEmpty(line))
             {
