@@ -3,14 +3,27 @@ using System.Runtime.CompilerServices;
 
 namespace SSETestClient.Logic;
 
+/// <summary>
+/// Represents a client that connects to a 
+/// server and receives SSE (Server-Sent Events) through HTTP.
+/// </summary>
 public class SseClient : ISseClient
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SseClient"/> class.
+    /// </summary>
+    /// <param name="httpClient">The <see cref="HttpClient"/> 
+    /// used to make requests.</param>
+    /// <exception cref="ArgumentNullException">Thrown if 
+    /// <paramref name="httpClient"/> is null.</exception>
+
     public SseClient(HttpClient httpClient)
     {
         ArgumentNullException.ThrowIfNull(httpClient);
         _httpClient = httpClient;
     }
 
+    /// <inheritdoc/>
     public async IAsyncEnumerable<SseEvent> ConnectAsync(
         Uri uri,
         [EnumeratorCancellation] CancellationToken cancellationToken)
