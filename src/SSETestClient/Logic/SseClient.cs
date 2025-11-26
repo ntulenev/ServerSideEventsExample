@@ -40,11 +40,18 @@ public class SseClient : ISseClient
         using var body = await response.Content.ReadAsStreamAsync(cancellationToken);
         using var reader = new StreamReader(body);
 
-        while (!reader.EndOfStream)
+
+        while (true)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
             var line = await reader.ReadLineAsync(cancellationToken);
-            if (TryParseSseEvent(line, out SseEvent eventObj))
+            if (line is null)
+            {
+                yield break;
+            }
+
+            if (TryParseSseEvent(line, out var eventObj))
             {
                 yield return eventObj;
             }
