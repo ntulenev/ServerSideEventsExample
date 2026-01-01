@@ -1,9 +1,9 @@
-﻿namespace SSETestClient.Models;
+namespace SSETestClient.Models;
 
 /// <summary>
 /// Represents an SSE (Server-Sent Events) message.
 /// </summary>
-public class SseEvent
+internal sealed class SseEvent
 {
     /// <summary>
     /// Gets the key identifier for the SSE event.
@@ -25,8 +25,8 @@ public class SseEvent
     /// is null or whitespace.</exception>
     public SseEvent(string key, string payload)
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(key);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(payload);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+        ArgumentException.ThrowIfNullOrWhiteSpace(payload);
 
         Key = key;
         Payload = payload;
