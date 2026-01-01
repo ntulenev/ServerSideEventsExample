@@ -1,4 +1,5 @@
-﻿using SSETestClient.Models;
+using SSETestClient.Models;
+
 using System.Runtime.CompilerServices;
 
 namespace SSETestClient.Logic;
@@ -7,7 +8,9 @@ namespace SSETestClient.Logic;
 /// Represents a client that connects to a 
 /// server and receives SSE (Server-Sent Events) through HTTP.
 /// </summary>
-public class SseClient : ISseClient
+#pragma warning disable CA1812 // This class is instantiated through DI.
+internal sealed class SseClient : ISseClient
+#pragma warning restore CA1812
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SseClient"/> class.
@@ -28,16 +31,17 @@ public class SseClient : ISseClient
         Uri uri,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, uri);
+        using var request = new HttpRequestMessage(HttpMethod.Get, uri);
         request.Headers.Accept.Add(
             new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("text/event-stream"));
 
         using var response = await _httpClient.SendAsync(
                                         request,
                                         HttpCompletionOption.ResponseHeadersRead,
-                                        cancellationToken);
+                                        cancellationToken).ConfigureAwait(false);
 
-        using var body = await response.Content.ReadAsStreamAsync(cancellationToken);
+        using var body = await response.Content.ReadAsStreamAsync(cancellationToken)
+                                       .ConfigureAwait(false);
         using var reader = new StreamReader(body);
 
 
@@ -45,7 +49,7 @@ public class SseClient : ISseClient
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var line = await reader.ReadLineAsync(cancellationToken);
+            var line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
             if (line is null)
             {
                 yield break;
@@ -67,7 +71,7 @@ public class SseClient : ISseClient
             return false;
         }
 
-        var delimiterPos = line.IndexOf(':');
+        var delimiterPos = line.IndexOf(':', StringComparison.InvariantCulture);
         if (delimiterPos > -1)
         {
             var key = line[..delimiterPos].Trim().ToString();
