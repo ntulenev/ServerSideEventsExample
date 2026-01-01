@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 using SSETestClient.Logic;
 
+using var httpClient = new HttpClient();
 var serviceCollection = new ServiceCollection();
 serviceCollection.AddSingleton<ISseClient, SseClient>();
-serviceCollection.AddSingleton(new HttpClient());
+serviceCollection.AddSingleton(httpClient);
 
 var sp = serviceCollection.BuildServiceProvider();
 
@@ -21,7 +22,7 @@ Console.CancelKeyPress += (sender, e) =>
 
 var uriPath = "http://localhost:5253/events/for/123";
 
-await foreach (var item in service.ConnectAsync(new Uri(uriPath), cts.Token))
+await foreach (var item in service.ConnectAsync(new Uri(uriPath), cts.Token).ConfigureAwait(false))
 {
     Console.WriteLine(item);
 }
