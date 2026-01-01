@@ -1,4 +1,4 @@
-﻿using SSETestClient.Models;
+using SSETestClient.Models;
 
 namespace SSETestClient.Logic;
 
@@ -6,7 +6,7 @@ namespace SSETestClient.Logic;
 /// Defines a client interface for connecting 
 /// to a server and receiving SSE (Server-Sent Events).
 /// </summary>
-public interface ISseClient
+internal interface ISseClient
 {
     /// <summary>
     /// Asynchronously connects to a server using 
